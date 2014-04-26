@@ -30,7 +30,7 @@ module Replicator
       def receiver(handler)
         case handler
         when Symbol
-          @receiver_proc = Proc.new { |data| caller.send(handler, data) }
+          @receiver_proc = Proc.new { |action, state| caller.send(handler, action, state) }
         when Proc
           @receiver_proc = handler
         else

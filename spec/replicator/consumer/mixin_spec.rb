@@ -11,18 +11,16 @@ describe Replicator::Consumer::Mixin do
           # kafka.push collection, packet
         }
 
-        receiver :receive
-      end
-
-      def self.receive(data)
-        :received
+        receiver proc { |action, state|
+          :received
+        }
       end
     end
 
     subject { DummyModel.new }
 
     it 'should create valid schema' do
-      subject.consumer.process({some_data: :ok}).should eq(:received)
+      subject.consumer.process(:update, id: 1).should eq(:received)
     end
   end
 end

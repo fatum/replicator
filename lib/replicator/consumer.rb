@@ -9,8 +9,8 @@ module Replicator
       @schema = schema
     end
 
-    def process(data)
-      schema.receiver_proc.call(data)
+    def process(*data)
+      schema.receiver_proc.call(*data)
     end
   end
 end

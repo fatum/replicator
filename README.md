@@ -1,6 +1,16 @@
 # Replicator
 
-TODO: Write a gem description
+This library create transparent interface for state replication.
+
+You can use any kind of message queue for changes delivery.
+Like aws sqs, kafka, amqp, sidekiq or your custom adapter for unsupported MQ.
+
+Also, replicator-versioner provide extension for fixing eventual consistency
+For example, one service after updating entity state (user's data) publish task
+using message queue to another service to notify all user's subscribers about changes.
+
+But, when entity's state not replicated to service we cannot process task correctly and
+should guarantee what producer's and publisher's versions are same.
 
 ## Installation
 
@@ -20,11 +30,9 @@ Or install it yourself as:
 
 ```
 class Web::Offer < ActiveRecord::Base
-  include Replicator::Producer
+  include Replicator::Producer::Mixin
 
   produce :offers do
-    # default
-    # primary_key :id
     consumers [:ad_server, :rewards]
     adapter :sidekiq # can be any callable object -> adapter YourProducerImplementation
     preparator :prepare
@@ -44,24 +52,21 @@ end
 
 class ConsumedOffer
   include Redis::Objects
-  include Replicator::Consumer
+  include Replicator::Consumer::Mixin
 
   consume :offers do
-    # default
-    # primary_key :id # object should respond_to :id
     adapter :sidekiq
-    receiver :receive # can be method or any callable object
-  end
 
-  def receive(action, data)
-    offer = Offer.find(data.id)
-    offer.status = data.status
-    offer.save
+    receiver proc { |action, state|
+      when action
+      case :update
+        offer = Offer.find(state.id)
+        offer.status = state.status
+        offer.save
+      end
+    }
   end
 end
-
-redis_offer = Offer.find(1)
-redis_offer.last_version?
 
 # For AWS replicator
 bundle exec replicator subscribe
