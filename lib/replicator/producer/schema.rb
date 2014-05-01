@@ -17,7 +17,7 @@ module Replicator
         case adapter
         when Symbol
           require "replicator/producer/#{adapter}"
-          cls = "Replicator::Producer::#{adapter.to_s.camelcase}".constantize.new(collection, consumers)
+          cls = "Replicator::Producer::#{adapter.to_s.camelcase}".constantize.new(collection, @consumers)
 
           @adapter_proc = Proc.new { |action, data| cls.call(action, data) }
         when Proc
