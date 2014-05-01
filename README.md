@@ -75,19 +75,13 @@ end
 1. SQS adapter.
 2. Sidekiq adapter.
 3. Lifecycle management (for plugin development).
-4. Receiver callable class with sugar (add on_update, on_create methods).
-5. Bulk consuming.
-6. State versions.
-7. Global syncing.
-
-# For AWS replicator
-bundle exec replicator subscribe
+4. Bulk consuming.
+5. State versions.
+6. Global syncing.
 
 # For sidekiq
 # should create workers classes on fly
 # http://blog.revathskumar.com/2013/05/ruby-create-classes-on-fly.html
-bundle exec sidekiq -q replicator-offers
-
 ```
 
 ## Contributing
