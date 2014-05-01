@@ -17,14 +17,14 @@ module Replicator
         self.data[name].pop
       end
 
-      def push(message)
+      def push(packet)
         self.data[name] ||= []
-        self.data[name] << message
+        self.data[name] << packet
       end
 
       def on_message(&block)
-        if message = pop
-          block.call Replicator::Packet.new(message)
+        if packet = pop
+          block.call packet
         end
       end
     end

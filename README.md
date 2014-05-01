@@ -33,9 +33,13 @@ class Web::Offer < ActiveRecord::Base
   include Replicator::Producer::Mixin
 
   produce :offers do
-    consumers [:ad_server, :rewards]
+    consumers :ad_server, :rewards
     adapter :sidekiq # can be any callable object -> adapter YourProducerImplementation
     preparator :prepare
+
+    adapter proc { |action, data|
+      # send
+    }
   end
 
   def prepare
