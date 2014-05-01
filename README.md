@@ -50,23 +50,31 @@ class Web::Offer < ActiveRecord::Base
   end
 end
 
+class Updater < Replicator::Receiver::Observer
+  def update(state)
+    p "state updated to: #{state}"
+  end
+end
+
 class ConsumedOffer
   include Redis::Objects
   include Replicator::Consumer::Mixin
 
   consume :offers do
     adapter :sidekiq
-
-    receiver proc { |action, state|
-      when action
-      case :update
-        offer = Offer.find(state.id)
-        offer.status = state.status
-        offer.save
-      end
-    }
+    receiver Updater
   end
 end
+
+# TODO
+
+1. SQS adapter.
+2. Sidekiq adapter.
+3. Lifecycle management (for plugin development).
+4. Receiver callable class with sugar (add on_update, on_create methods).
+5. Bulk consuming.
+6. State versions.
+7. Global syncing.
 
 # For AWS replicator
 bundle exec replicator subscribe

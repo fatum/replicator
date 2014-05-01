@@ -1,5 +1,6 @@
 require 'replicator/consumer/schema'
 require 'replicator/consumer/mixin'
+require 'replicator/receiver/observer'
 
 module Replicator
   class Consumer
@@ -9,8 +10,14 @@ module Replicator
       @schema = schema
     end
 
-    def process(*data)
-      schema.receiver_proc.call(*data)
+    def process(data)
+      schema.receiver_proc.call(data)
+    end
+
+    # Should start consuming state changes
+    # usign adapter
+    def start!
+      schema.adapter_proc.call(self)
     end
   end
 end

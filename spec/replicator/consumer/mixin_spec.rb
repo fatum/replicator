@@ -6,12 +6,9 @@ describe Replicator::Consumer::Mixin do
       include Replicator::Consumer::Mixin
 
       consume :collection do
-        adapter proc { |collection, action, state|
-          # packet = Replicator::Packet.new(action, state)
-          # kafka.push collection, packet
-        }
+        adapter :dummy
 
-        receiver proc { |action, state|
+        receiver proc { |packet|
           :received
         }
       end

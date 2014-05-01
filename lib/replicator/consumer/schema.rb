@@ -13,9 +13,9 @@ module Replicator
         case adapter
         when Symbol
           require "replicator/consumer/#{adapter}"
-          cls = "Replicator::Consumer::#{adapter.camelcase}".constantize
+          cls = "Replicator::Consumer::#{adapter.to_s.camelcase}".constantize.new(collection)
 
-          @adapter_proc = Proc.new { |collection, action, state| cls.call(collection, action, state) }
+          @adapter_proc = Proc.new { |consumer| cls.call(consumer) }
         when Proc
           @adapter_proc = adapter
         else
@@ -30,13 +30,13 @@ module Replicator
       def receiver(handler)
         case handler
         when Symbol
-          @receiver_proc = Proc.new { |action, state| caller.send(handler, action, state) }
+          @receiver_proc = Proc.new { |packet| caller.send(handler, packet) }
         when Proc
           @receiver_proc = handler
         else
           if handler.respond_to? :call
             @receiver_proc = handler
-          else
+          elsif
             raise "Unsupported handler: #{handler}"
           end
         end
