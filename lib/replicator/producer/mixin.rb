@@ -15,6 +15,11 @@ module Replicator
             Replicator::Producer.new(schema)
           end
         end
+
+        if defined?(ActiveRecord::Base) && self.ancestors.include?(::ActiveRecord::Base)
+          require 'replicator/producer/active_record'
+          include Replicator::Producer::ActiveRecord
+        end
       end
     end
   end

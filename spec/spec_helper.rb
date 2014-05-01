@@ -9,6 +9,10 @@ require 'pry'
 require 'awesome_print'
 
 require 'replicator'
+require 'active_record'
+
+ActiveRecord::Base.establish_connection YAML.load_file('config/database.yml')['test']
+ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true

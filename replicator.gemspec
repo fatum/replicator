@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Replicator::VERSION
   spec.authors       = ["Maxim Filippovich"]
   spec.email         = ["fatumka@gmail.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = "Replication framework"
+  spec.summary       = "Replicate your data state across services transparantly"
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activesupport", "~> 3.0"
+  spec.add_dependency "activesupport"
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"
@@ -29,6 +29,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "awesome_print"
 
   spec.add_development_dependency "sidekiq"
+  spec.add_development_dependency "activerecord", '~> 4.0'
+  spec.add_development_dependency "mysql2"
   spec.add_development_dependency "aws"
   spec.add_development_dependency "redis-objects"
 end

@@ -1,4 +1,14 @@
+require 'rubygems'
+require 'bundler/setup'
+
+Bundler.require :default, :development
+
 require "bundler/gem_tasks"
+require 'sinatra/activerecord'
+require 'sinatra/activerecord/rake'
+
+ActiveRecord::Base.establish_connection YAML.load_file('config/database.yml')['development']
+ActiveRecord::Base.logger = Logger.new(STDOUT)
 
 task :environment do
   require 'replicator'
