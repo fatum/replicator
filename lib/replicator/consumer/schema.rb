@@ -36,7 +36,7 @@ module Replicator
         else
           if handler.respond_to? :call
             @receiver_proc = handler
-          elsif
+          else
             raise "Unsupported handler: #{handler}"
           end
         end

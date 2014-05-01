@@ -17,7 +17,7 @@ describe Replicator::Consumer::Mixin do
     subject { DummyModel.new }
 
     it 'should create valid schema' do
-      subject.consumer.process(:update, id: 1).should eq(:received)
+      subject.consumer.process(action: :update, state: {id: 1}).should eq(:received)
     end
   end
 end
