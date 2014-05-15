@@ -81,10 +81,6 @@ end
 5. State versions.
 6. Global syncing.
 
-# For sidekiq
-# should create workers classes on fly
-# http://blog.revathskumar.com/2013/05/ruby-create-classes-on-fly.html
-
 ## Contributing
 
 1. Fork it
