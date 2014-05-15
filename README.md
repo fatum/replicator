@@ -5,12 +5,12 @@ This library create transparent interface for state replication.
 You can use any kind of message queue for changes delivery.
 Like aws sqs, kafka, amqp, sidekiq or your custom adapter for unsupported MQ.
 
-Also, replicator-versioner provide extension for fixing eventual consistency
+Also, replicator-versioner provide extension for fixing eventual consistency.
 For example, one service after updating entity state (user's data) publish task
 using message queue to another service to notify all user's subscribers about changes.
 
 But, when entity's state not replicated to service we cannot process task correctly and
-should guarantee what producer's and publisher's versions are same.
+should guarantee what producer's and consumer's versions are same.
 
 ## Installation
 
@@ -28,7 +28,7 @@ Or install it yourself as:
 
 ## Usage
 
-```
+```ruby
 class Web::Offer < ActiveRecord::Base
   include Replicator::Producer::Mixin
 
@@ -70,6 +70,8 @@ class ConsumedOffer
   end
 end
 
+```
+
 # TODO
 
 1. SQS adapter.
@@ -82,7 +84,6 @@ end
 # For sidekiq
 # should create workers classes on fly
 # http://blog.revathskumar.com/2013/05/ruby-create-classes-on-fly.html
-```
 
 ## Contributing
 
