@@ -6,6 +6,7 @@ describe Replicator::Consumer::Mixin do
       include Replicator::Consumer::Mixin
 
       consume :collection do
+        name :dummy
         adapter :dummy
 
         receiver proc { |packet|

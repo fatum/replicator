@@ -29,6 +29,7 @@ describe Replicator::Producer::Mixin do
       include Replicator::Consumer::Mixin
 
       consume :collection do
+        name :temp
         adapter :dummy
         receiver proc { |packet| packet.state }
       end
@@ -38,7 +39,7 @@ describe Replicator::Producer::Mixin do
       model = DummyProducerModel.new(id: 2)
       model.update id: 3
 
-      DummyConsumerModel.consumer.start!.should eq(id: 3)
+      DummyConsumerModel.consumer.receiving.should eq(id: 3)
     end
   end
 end

@@ -8,7 +8,10 @@ module Replicator
   autoload :Consumer, 'replicator/consumer'
   autoload :Producer, 'replicator/producer'
 
-  # Your code goes here...
+  mattr_accessor :consumers
+  mattr_accessor :producers
+
+  self.consumers, self.producers = {}, []
 end
 
 require 'replicator/config'

@@ -1,12 +1,16 @@
 module Replicator
   class Consumer
     class Schema
-      attr_reader :caller, :collection, :adapter_proc, :receiver_proc
+      attr_reader :caller, :collection, :_name, :adapter_proc, :receiver_proc
 
       def initialize(collection, caller, &block)
         @caller, @collection = caller, collection
 
         instance_eval &block
+      end
+
+      def name(name)
+        @_name = name
       end
 
       def adapter(adapter)

@@ -14,6 +14,7 @@ describe 'ActiveRecord integration' do
     include Replicator::Consumer::Mixin
 
     consume :temps do
+      name :temp
       adapter :dummy
       receiver proc { |packet| packet.state }
     end
@@ -32,7 +33,7 @@ describe 'ActiveRecord integration' do
   describe 'after create' do
     it 'should produce state change' do
       TempRecord.create(col: 2)
-      TempConsumer.consumer.start!.should eq('col' => 2, 'id' => 1)
+      TempConsumer.consumer.receiving.should eq('col' => 2, 'id' => 1)
     end
   end
 end

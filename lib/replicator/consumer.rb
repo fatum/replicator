@@ -6,6 +6,9 @@ module Replicator
   class Consumer
     attr_reader :schema
 
+    delegate :_name, :collection, to: :schema
+    alias :name :_name
+
     def initialize(schema)
       @schema = schema
     end
@@ -15,8 +18,8 @@ module Replicator
     end
 
     # Should start consuming state changes
-    # usign adapter
-    def start!
+    # using adapter
+    def receiving
       schema.adapter_proc.call(self)
     end
   end

@@ -12,7 +12,12 @@ module Replicator
         def self.consume(collection, &block)
           self.consumer ||= begin
             schema = Replicator::Consumer::Schema.new(collection, self, &block)
-            Replicator::Consumer.new(schema)
+
+            raise "Specify consumer's name!" if schema._name.blank?
+
+            Replicator::Consumer.new(schema).tap do |consumer|
+              Replicator.consumers[schema._name] = consumer
+            end
           end
         end
       end

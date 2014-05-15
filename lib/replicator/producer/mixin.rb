@@ -11,6 +11,8 @@ module Replicator
 
         def self.produce(collection, &block)
           self.producer ||= begin
+            Replicator.producers.tap { |c| c << collection }.uniq!
+
             schema = Replicator::Producer::Schema.new(collection, self, &block)
             Replicator::Producer.new(schema)
           end
