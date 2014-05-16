@@ -1,16 +1,10 @@
 # Replicator
 
-This library create transparent interface for state replication.
+A library for creating transparent interfaces for state replication.
 
-You can use any kind of message queue for changes delivery.
-Like aws sqs, kafka, amqp, sidekiq or your custom adapter for unsupported MQ.
+Works with any kind of message queue for synching changes: aws sqs, kafka, amqp, sidekiq. Custom adapters make it trivial to use other MQs.
 
-Also, replicator-versioner provide extension for fixing eventual consistency.
-For example, one service after updating entity state (user's data) publish task
-using message queue to another service to notify all user's subscribers about changes.
-
-But, when entity's state not replicated to service we cannot process task correctly and
-should guarantee what producer's and consumer's versions are same.
+Also, replicator-versioner provides extensions for ensuring eventual consistency. Should an entity update but replication to another service fail, the consuming service can check its entity's version against the producer's before proceeding with its task at hand.
 
 ## Installation
 
@@ -44,7 +38,7 @@ class Web::Offer < ActiveRecord::Base
 
   def prepare
     # prepare data for publishing
-    # e.x. we have publish some relations data
+    # e.x. here we publish some associations data
 
     attributes.merge(
       countries: countries.slice(:id, :code),
@@ -74,12 +68,12 @@ end
 
 # TODO
 
-1. SQS adapter.
-2. Sidekiq adapter.
-3. Lifecycle management (for plugin development).
-4. Bulk consuming.
-5. State versions.
-6. Global syncing.
+- [ ] SQS adapter
+- [ ] Sidekiq adapter
+- [ ] Lifecycle management (for plugin development)
+- [ ] Bulk consuming
+- [ ] State versions
+- [ ] Global syncing
 
 ## Contributing
 
