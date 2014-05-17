@@ -10,15 +10,11 @@ Also, replicator-versioner provides extensions for ensuring eventual consistency
 
 Add this line to your application's Gemfile:
 
-    gem 'replicator'
+    gem 'replicator', github: 'fatum/replicator'
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install replicator
 
 ## Usage
 
