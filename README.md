@@ -26,10 +26,6 @@ class Web::Offer < ActiveRecord::Base
     consumers :ad_server, :rewards
     adapter :sidekiq # can be any callable object -> adapter YourProducerImplementation
     preparator :prepare
-
-    adapter proc { |action, data|
-      # send
-    }
   end
 
   def prepare
@@ -56,7 +52,7 @@ class ConsumedOffer
 
   consume :offers do
     adapter :sidekiq
-    receiver Updater
+    receiver Updater # or proc { |packet| p "#{packet.action}: #{packet.state}" }
   end
 end
 
