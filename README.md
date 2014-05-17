@@ -69,7 +69,7 @@ end
 # TODO
 
 - [ ] SQS adapter
-- [ ] Sidekiq adapter
+- [x] Sidekiq adapter http://github.com/fatum/replicator-sidekiq
 - [ ] Lifecycle management (for plugin development)
 - [ ] Bulk consuming
 - [ ] State versions
