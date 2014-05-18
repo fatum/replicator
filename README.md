@@ -18,6 +18,11 @@ And then execute:
 
     $ bundle
 
+## Benefits over database replication
+
+* Hetrogenous replication. e.g. replicate from Mongo -> Postgres | ElasticSearch | Redis ...
+* "Remote observers". The ability to observe model changes in one application from another.
+
 ## Features
 
 * Simple
