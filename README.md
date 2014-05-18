@@ -6,7 +6,7 @@ A library for creating transparent interfaces for state replication.
 
 Works with any kind of message queue for synching changes: aws sqs, kafka, amqp, sidekiq. Custom adapters make it trivial to use other MQs.
 
-Also, `replicator-consistent` provides extensions for ensuring eventual consistency. Should an entity update but replication to another service fail, the consuming service can check its entity's version against the producer's before proceeding with its task at hand.
+Also, http://github.com/fatum/replicator-consistent provides extensions for ensuring eventual consistency. Should an entity update but replication to another service fail, the consuming service can check its entity's version against the producer's before proceeding with its task at hand.
 
 ## Installation
 
@@ -23,7 +23,7 @@ And then execute:
 * Simple
 * Framework agnostic
 * Adapter agnostic
-* Sequential consistency - updates from a producer will be applied in the order that they were sent for record (`replicator-constistent`)
+* Sequential consistency - updates from a producer will be applied in the order that they were sent for record (http://github.com/fatum/replicator-constistent)
 
 ## Usage
 
@@ -42,9 +42,9 @@ class Web::Offer < ActiveRecord::Base
     # e.x. here we produce some associations data
 
     attributes.merge(
-      countries: countries.slice(:id, :code),
-      browsers: browsers.slice(:id, :name),
-      oses: oses.slice(:id, :name)
+      countries: countries
+      browsers: browsers
+      oses: oses
     )
   end
 end
