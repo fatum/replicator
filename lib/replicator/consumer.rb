@@ -4,13 +4,20 @@ require 'replicator/receiver/observer'
 
 module Replicator
   class Consumer
-    attr_reader :schema
+    attr_reader :schema, :events
 
     delegate :_name, :collection, to: :schema
     alias :name :_name
 
+    delegate :run_callbacks, :run_around_callbacks, to: :events
+
+    class << self
+      delegate :subscribe, to: Replicator::Events
+    end
+
     def initialize(schema)
       @schema = schema
+      @events = Replicator::Events.new(self)
     end
 
     def process(data)

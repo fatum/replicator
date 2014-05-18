@@ -6,7 +6,7 @@ A library for creating transparent interfaces for state replication.
 
 Works with any kind of message queue for synching changes: aws sqs, kafka, amqp, sidekiq. Custom adapters make it trivial to use other MQs.
 
-Also, replicator-versioner provides extensions for ensuring eventual consistency. Should an entity update but replication to another service fail, the consuming service can check its entity's version against the producer's before proceeding with its task at hand.
+Also, `replicator-consistent` provides extensions for ensuring eventual consistency. Should an entity update but replication to another service fail, the consuming service can check its entity's version against the producer's before proceeding with its task at hand.
 
 ## Installation
 
@@ -82,11 +82,13 @@ Replicator::Consumer provides callbacks for subscribing
 * `Replicator::Consumer.subscribe(:after_consume) { |producer, packet| }`
 * `Replicator::Consumer.subscribe(:before_consume) { |producer, packet| }`
 
-For example, `replicator-consistency` uses callback around_produce
+For example, `replicator-consistent` uses callback around_produce
 ```ruby
 
-Replicator::Publisher.subscribe :around_produce do |publisher, packet, cb|
+Replicator::Publisher.subscribe :around_transaction do |publisher, packet, cb|
+  # We should guarantee that all changes for record would applied sequentially
   begin
+    packet.mutate!
     cb.call
     packet.commit!
   rescue StandardError
@@ -97,15 +99,12 @@ Replicator::Publisher.subscribe :around_produce do |publisher, packet, cb|
   end
 end
 
-Replicator::Publisher.subscribe :around_produce do |publisher, packet, cb|
+Replicator::Publisher.subscribe :around_transaction do |publisher, packet, cb|
   if publisher.use_active_record?
     ActiveRecord::Base.transaction do
-      # We should guarantee that all changes for record would applied sequentially
-      packet.mutate!
       cb.call
     end
   else
-    packet.mutate!
     cb.call
   end
 end
