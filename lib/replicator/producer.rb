@@ -13,7 +13,7 @@ module Replicator
     end
 
     def sync(action, data)
-      packet = Replicator::Packet.new(action: action, state: data)
+      packet = Replicator.packet.new(action: action, state: data)
 
       run_callbacks :before_produce, packet
 

@@ -77,42 +77,50 @@ Replicator::Consumer provides callbacks for subscribing
 For example, `replicator-consistency` uses callback around_produce
 ```ruby
 
-  Replicator::Publisher.subscribe :around_produce do |publisher, packet, cb|
-    begin
-      cb.call
-    rescue StandardError
-      # Should mark packet as error
-      # When db transaction rollback, but adapter pushed message to consumers successfully
-      # When consumer receive invalid message, it should check packet.error? before processing
-      # if packet marked as error it should be skipped
-      packet.error!
-    end
+Replicator::Publisher.subscribe :around_produce do |publisher, packet, cb|
+  begin
+    cb.call
+    packet.commit
+  rescue StandardError
+    # Should mark packet as error
+    # When db transaction rollback, but adapter pushed message to consumers successfully
+    # When consumer receive invalid message, it should check packet.error? before processing
+    # if packet marked as error it should be skipped
+    packet.error!
   end
+end
 
-  Replicator::Publisher.subscribe :around_produce do |publisher, packet, cb|
-    if publisher.use_active_record?
-      ActiveRecord::Base.transaction do
-        # We should guarantee that all messages per record would be
-        # processed sequential by order
-        #
-        # If consumer receive packet which
-        packet.mutate!
-        cb.call
-      end
-    else
+Replicator::Publisher.subscribe :around_produce do |publisher, packet, cb|
+  if publisher.use_active_record?
+    ActiveRecord::Base.transaction do
+      # We should guarantee that all messages per record would be
+      # processed sequential by order
+      #
+      # If consumer receive packet which
       packet.mutate!
-      yield block
+      cb.call
     end
+  else
+    packet.mutate!
+    yield block
   end
+end
+```
+
+## Configuring
+
+You could use custom Packet class
+
+```ruby
+Replicator.packet = CustomPacketClass
 ```
 
 # TODO
 
-- [ ] SQS adapter
 - [x] Sidekiq adapter http://github.com/fatum/replicator-sidekiq
 - [x] Lifecycle management (for plugin development)
-- [ ] Bulk consuming
-- [ ] State versions
+- [ ] Consistency
+- [ ] SQS adapter
 - [ ] Global syncing
 
 ## Contributing

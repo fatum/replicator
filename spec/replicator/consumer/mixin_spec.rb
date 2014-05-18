@@ -19,7 +19,7 @@ describe Replicator::Consumer::Mixin do
 
     it 'should create valid schema' do
       subject.consumer.
-            process(Replicator::Packet.new(action: :update, state: {id: 1})).
+            process(Replicator.packet.new(action: :update, state: {id: 1})).
             should eq(:received)
     end
   end

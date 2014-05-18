@@ -12,7 +12,7 @@ module Replicator
       end
 
       def call(action, data)
-        @adapters.each { |a| a.push Replicator::Packet.new(action: action, state: data) }
+        @adapters.each { |a| a.push Replicator.packet.new(action: action, state: data) }
       end
     end
   end
