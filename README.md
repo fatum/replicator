@@ -106,7 +106,7 @@ Replicator::Publisher.subscribe :around_produce do |publisher, packet, cb|
     end
   else
     packet.mutate!
-    yield block
+    cb.call
   end
 end
 ```
