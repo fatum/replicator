@@ -86,7 +86,7 @@ Replicator::Consumer provides callbacks for subscribing
 * `Replicator::Consumer.subscribe(:after_consume) { |producer, packet| }`
 * `Replicator::Consumer.subscribe(:before_consume) { |producer, packet| }`
 
-For example, [replicator-consistent](http://github.com/fatum/replicator-consistent) uses callback around_produce
+For example, [replicator-consistent](http://github.com/fatum/replicator-consistent) uses callback around_transaction
 ```ruby
 
 Replicator::Publisher.subscribe :around_transaction do |publisher, packet, cb|
