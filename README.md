@@ -6,7 +6,7 @@ A library for creating transparent interfaces for state replication. Inspired by
 
 Works with any kind of message queue for synching changes: aws sqs, kafka, amqp, sidekiq. Custom adapters make it trivial to use other MQs.
 
-Also, [replicator-consistent](http://github.com/fatum/replicator-consistent) provides extensions for ensuring eventual consistency. Should an entity update but replication to another service fail, the consuming service can check its entity's version against the producer's before proceeding with its task at hand.
+Also, [replicator-consistent](https://github.com/fatum/replicator-consistent) provides extensions for ensuring eventual consistency. Should an entity update but replication to another service fail, the consuming service can check its entity's version against the producer's before proceeding with its task at hand.
 
 ## Installation
 
