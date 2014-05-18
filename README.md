@@ -18,6 +18,13 @@ And then execute:
 
     $ bundle
 
+## Features
+
+* Simple
+* Framework agnostic
+* Adapter agnostic
+* Sequential Consistency - Updates from a publisher will be applied in the order that they were sent for record
+
 ## Usage
 
 ```ruby
@@ -26,7 +33,7 @@ class Web::Offer < ActiveRecord::Base
 
   produce :offers do
     consumers :ad_server, :rewards
-    adapter :sidekiq # can be any callable object -> adapter YourProducerImplementation
+    adapter :sidekiq
     preparator :prepare
   end
 
@@ -54,7 +61,8 @@ class ConsumedOffer
 
   consume :offers do
     adapter :sidekiq
-    receiver Updater # or proc { |packet| p "#{packet.action}: #{packet.state}" }
+    receiver Updater
+    # or receive proc { |packet| p "#{packet.action}: #{packet.state}" }
   end
 end
 
@@ -80,12 +88,11 @@ For example, `replicator-consistency` uses callback around_produce
 Replicator::Publisher.subscribe :around_produce do |publisher, packet, cb|
   begin
     cb.call
-    packet.commit
+    packet.commit!
   rescue StandardError
     # Should mark packet as error
-    # When db transaction rollback, but adapter pushed message to consumers successfully
-    # When consumer receive invalid message, it should check packet.error? before processing
-    # if packet marked as error it should be skipped
+    # 1. db transaction rollback and adapter had pushed message to consumers
+    # 2. if consumer adapter receive invalid message it should check packet.error? before processing
     packet.error!
   end
 end
@@ -93,10 +100,7 @@ end
 Replicator::Publisher.subscribe :around_produce do |publisher, packet, cb|
   if publisher.use_active_record?
     ActiveRecord::Base.transaction do
-      # We should guarantee that all messages per record would be
-      # processed sequential by order
-      #
-      # If consumer receive packet which
+      # We should guarantee that all changes for record would applied sequentially
       packet.mutate!
       cb.call
     end
