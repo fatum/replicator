@@ -2,7 +2,7 @@
 
 [![Code Climate](https://codeclimate.com/github/fatum/replicator.png)](https://codeclimate.com/github/fatum/replicator)
 
-A library for creating transparent interfaces for state replication.
+A library for creating transparent interfaces for state replication. Inspired by [promiscuous](https://github.com/promiscuous-io/promiscuous)
 
 Works with any kind of message queue for synching changes: aws sqs, kafka, amqp, sidekiq. Custom adapters make it trivial to use other MQs.
 
