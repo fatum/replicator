@@ -66,8 +66,7 @@ class ConsumedOffer
 
   consume :offers do
     adapter :sidekiq
-    receiver Updater
-    # or receive proc { |packet| p "#{packet.action}: #{packet.state}" }
+    receiver Updater # or proc { |packet| p "#{packet.action}: #{packet.state}" }
   end
 end
 
@@ -125,7 +124,7 @@ Replicator.packet = CustomPacketClass
 
 # TODO
 
-- [x] Sidekiq adapter http://github.com/fatum/replicator-sidekiq
+- [x] Sidekiq adapter [replicator-sidekiq](http://github.com/fatum/replicator-sidekiq)
 - [x] Lifecycle management (for plugin development)
 - [ ] Consistency
 - [ ] SQS adapter
