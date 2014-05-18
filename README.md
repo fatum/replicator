@@ -38,8 +38,8 @@ class Web::Offer < ActiveRecord::Base
   end
 
   def prepare
-    # prepare data for publishing
-    # e.x. here we publish some associations data
+    # prepare data for producing
+    # e.x. here we produce some associations data
 
     attributes.merge(
       countries: countries.slice(:id, :code),
