@@ -60,11 +60,57 @@ end
 
 ```
 
+## Lifecycle management
+
+Replicator::Producer provides callbacks for subscribing
+
+* `Replicator::Producer.subscribe(:around_produce) { |producer, packet, block| }`
+* `Replicator::Producer.subscribe(:after_produce) { |producer, packet| }`
+* `Replicator::Producer.subscribe(:before_produce) { |producer, packet| }`
+
+Replicator::Consumer provides callbacks for subscribing
+
+* `Replicator::Consumer.subscribe(:around_consume) { |producer, packet, block| }`
+* `Replicator::Consumer.subscribe(:after_consume) { |producer, packet| }`
+* `Replicator::Consumer.subscribe(:before_consume) { |producer, packet| }`
+
+For example, replicator-consistency uses callback around_transaction, like
+```ruby
+
+  Replicator::Publisher.subscribe :around_produce do |publisher, packet, cb|
+    begin
+      cb.call
+    rescue StandardError
+      # Should mark packet as error
+      # When db transaction rollback, but adapter pushed message to consumers successfully
+      # When consumer receive invalid message, it should check packet.error? before processing
+      # if packet marked as error it should be skipped
+      packet.error!
+    end
+  end
+
+  Replicator::Publisher.subscribe :around_produce do |publisher, packet, cb|
+    if publisher.use_active_record?
+      ActiveRecord::Base.transaction do
+        # We should guarantee that all messages per record would be
+        # processed sequential by order
+        #
+        # If consumer receive packet which
+        packet.mutate!
+        cb.call
+      end
+    else
+      packet.mutate!
+      yield block
+    end
+  end
+```
+
 # TODO
 
 - [ ] SQS adapter
 - [x] Sidekiq adapter http://github.com/fatum/replicator-sidekiq
-- [ ] Lifecycle management (for plugin development)
+- [x] Lifecycle management (for plugin development)
 - [ ] Bulk consuming
 - [ ] State versions
 - [ ] Global syncing
