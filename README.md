@@ -23,7 +23,7 @@ And then execute:
 * Simple
 * Framework agnostic
 * Adapter agnostic
-* Sequential Consistency - Updates from a publisher will be applied in the order that they were sent for record
+* Sequential consistency - updates from a producer will be applied in the order that they were sent for record (`replicator-constistent`)
 
 ## Usage
 
