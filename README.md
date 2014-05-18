@@ -76,6 +76,7 @@ end
 
 Replicator::Producer provides callbacks for subscribing
 
+* `Replicator::Producer.subscribe(:around_transaction) { |producer, packet, block| }`
 * `Replicator::Producer.subscribe(:around_produce) { |producer, packet, block| }`
 * `Replicator::Producer.subscribe(:after_produce) { |producer, packet| }`
 * `Replicator::Producer.subscribe(:before_produce) { |producer, packet| }`
